@@ -103,9 +103,9 @@ var someFunc = Impload.Func
 		console.log(arrayOfStrings.join());
 	});
 
-someFunc("a", "b", "c"); // Outputs "a,b,c"
-someFunc(1, 2, 3); // Outputs "1,2,3"
-someFunc("a", "b", 3) // Error! No function signature matches.
+someFunc(["a", "b", "c"]); // Outputs "a,b,c"
+someFunc([1, 2, 3]); // Outputs "1,2,3"
+someFunc(["a", "b", 3]) // Error! No function signature matches.
 ```
 
 ### Cascading function signatures
@@ -114,9 +114,9 @@ ImplOad can sometimes match multiple function signatures to an overloaded functi
 var someFunc = ImplOad.Func
 	.overload([ImplOad.String], function (arrayOfStrings) {	})
 	.overload([ImplOad.Number], function (arrayOfNumbers) {	})
-	.overload([], function (arrayOfAnything) { });
+	.overload([ImplOad.Dynamic], function (arrayOfAnything) { });
 	
-someFunc("a", "b", "c"); // Calls the first overload
-someFunc(1, 2, 3); // Calls the second overload
-someFunc("a", "b", 3) // Valid, calls the third overload
+someFunc(["a", "b", "c"]); // Matches [ImplOad.String] and [Impload.Dynamic] - [ImplOad.String] is called
+someFunc([1, 2, 3]); // Matches [ImplOad.Number] and [Impload.Dynamic] - [ImplOad.Number] is called
+someFunc(["a", "b", 3]) // Only matches [ImplOad.Dynamic]
 ```
