@@ -45,14 +45,6 @@
 
 			Person.prototype.meet = ImplOad.Func
 				.overload(ImplOad.String, function (name) {
-					this.meet([person]);
-				})
-				.overload([ImplOad.String], function (people) {
-					console.log(this.name + " met with " + people.join(", "));
-				});
-
-			Person.prototype.meet = ImplOad.Func
-				.overload(ImplOad.String, function (name) {
 					this.meet([name]);
 				})
 				.overload(ImplOad.Array, function (names) { // Specifying [] instead of ImplOad.Array also acceptable

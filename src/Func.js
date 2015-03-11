@@ -5,7 +5,9 @@ define(function (require) {
 
 	var funcHook;
 
-	var Func = function () { };
+	var Func = function () {
+		this.entries = {};
+	};
 
 	Func.prototype.overload = function () {
 		var isFuncHook = this === funcHook,
@@ -40,37 +42,23 @@ define(function (require) {
 	};
 
 	Func.prototype._addOverloadEntry = function (overloadArgs, overloadFunc) {
-		if (!this.entries) {
-			this.entries = {};
+		var overloadSignature = this._getOverloadSignature(overloadArgs);
+		if (this.entries[overloadSignature]) {
+			throw "Overload already specified for method signature";
 		}
-
-		if (overloadArgs.length === 0) {
-			this.entries.overloadFunc = overloadFunc;
-		} else {
-			var self = this,
-				numberOfArgs = overloadArgs.length,
-				prevEntryLevel = this.entries,
-				key,
-				i;
-
-			for (i = 0; i < numberOfArgs; i++) {
-				key = overloadArgs[i];
-				if (!prevEntryLevel[key]) {
-					prevEntryLevel[key] = {};
-				}
-				prevEntryLevel = prevEntryLevel[key];
-			}
-
-			prevEntryLevel.overloadFunc = overloadFunc;
-		}
+		this.entries[overloadSignature] = overloadFunc;
 	};
 
 	Func.prototype._getOverloadEntry = function (overloadArgs) {
-		var currentEntry = this.entries;
-		Util.forEach(overloadArgs, function (arg) {
-			currentEntry = currentEntry[arg];
-		});
-		return currentEntry.overloadFunc;
+		var overloadSignature = this._getOverloadSignature(overloadArgs);
+		if (!this.entries[overloadSignature]) {
+			throw "Overload does not exist for method signature";
+		}
+		return this.entries[overloadSignature];
+	};
+
+	Func.prototype._getOverloadSignature = function (overloadArgs) {
+		return overloadArgs.join();
 	};
 
 	funcHook = new Func();
