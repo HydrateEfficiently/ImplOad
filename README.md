@@ -76,7 +76,7 @@ var person = new Person("Michael", 25);
 Pass in any of these values to specify what argument types the function must take.
 - Strings: `ImplOad.String`, `window.String`
 - Numbers: `ImplOad.Number`, `window.Number`
-- Arrays: `ImplOad.Array`, `[]`
+- Arrays: `ImplOad.Array`, `window.Array`,  `[]`
 - Objects: `ImplOad.Object`
 - Functions: `ImplOad.Function`
 - Not-typed: `ImplOad.Dynamic`
@@ -86,9 +86,35 @@ By default in ImplOad, array values themselves are untyped when specified:
 ```Javascript
 	ImplOad.Func.overload(ImplOad.Array, function (array) { }); // Don't worry about the value types inside the array
 	ImplOad.Func.overload([], function (array) { }); // Equivalent
+	ImplOad.Func.overload(Array, function (array) { }); // Equivalent, reference check against window.Array object
 	ImplOad.Func.overload([ImplOad.Dynamic], function (array) { }); // Also equivalent
 ```
 However, you can make a function signature more specific by declaring the type of values you want the array to store:
 ```Javascript
-	Impload.Func
-		.overload([
+var someFunc = Impload.Func
+	.overload([ImplOad.Number], function (arrayOfNumbers) {
+		someFunc(arrayOfNumbers.map(function (number) { 
+			return number + "";
+		});
+	})
+	.overload([ImplOad.String], function (arrayOfStrings) {
+		console.log(arrayOfStrings.join());
+	});
+
+someFunc("a", "b", "c"); // Outputs "a,b,c"
+someFunc(1, 2, 3); // Outputs "1,2,3"
+someFunc("a", "b", 3) // Error! No function signature matches.
+```
+
+### Cascading function signatures
+ImplOad can sometimes match multiple function signatures to an overloaded function call. This is dealt with by selecting the **most-specific** function signature:
+```javascript
+var someFunc = ImplOad.Func
+	.overload([ImplOad.String], function (arrayOfStrings) {	})
+	.overload([ImplOad.Number], function (arrayOfNumbers) {	})
+	.overload([], function (arrayOfAnything) { });
+	
+someFunc("a", "b", "c"); // Calls the first overload
+someFunc(1, 2, 3); // Calls the second overload
+someFunc("a", "b", 3) // Valid, calls the third overload
+```
