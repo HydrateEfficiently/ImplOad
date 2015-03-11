@@ -80,7 +80,7 @@ Pass in any of these values to specify what "native" argument types the function
 - Numbers: `ImplOad.Number`, `window.Number`
 - Arrays: `ImplOad.Array`, `window.Array`,  `[]`
 - Objects: `ImplOad.Object`
-- Functions: `ImplOad.Function`
+- Functions: `ImplOad.Function`, `window.Function` (TODO)
 - Not-typed: `ImplOad.Dynamic`
 - Any constructor available in context: e.g. `Person` (TODO)
 
