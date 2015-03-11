@@ -1,18 +1,18 @@
 define(function (require) {
 
-	var Type = require("Type"),
+	var Types = require("Types"),
 		Util = require("Util");
 
-	var overloaderHook;
+	var funcHook;
 
-	var Overloader = function () { };
+	var Func = function () { };
 
-	Overloader.prototype.overload = function () {
-		var isOverloaderHook = this === overloaderHook,
+	Func.prototype.overload = function () {
+		var isFuncHook = this === funcHook,
 			overloadObj;
 
-		if (isOverloaderHook) {
-			overloadObj =  new Overloader();
+		if (isFuncHook) {
+			overloadObj =  new Func();
 		} else {
 			overloadObj = this;
 		}
@@ -21,7 +21,7 @@ define(function (require) {
 			overloadArgs = Array.prototype.slice.call(arguments, 0, argsLength - 1),
 			overloadFunc = arguments[argsLength - 1];
 
-		overloadObj._addOverloadEntry(this._convertPsuedoTypesToKey(overloadArgs), overloadFunc);
+		overloadObj._addOverloadEntry(overloadArgs, overloadFunc);
 
 		var theFunc = overloadObj._evaluateOverload();
 		theFunc.overload = function () {
@@ -30,41 +30,16 @@ define(function (require) {
 		return theFunc;
 	};
 
-	Overloader.prototype._evaluateOverload = function () {
+	Func.prototype._evaluateOverload = function () {
 		var overloadObj = this;
 		return function () {
-			var overloadArgs = overloadObj._convertObjectsToKey(Array.prototype.slice.call(arguments)),
+			var overloadArgs = Types.convertObjectsToKeys(Array.prototype.slice.call(arguments)),
 				overloadFunc = overloadObj._getOverloadEntry(overloadArgs);
 			overloadFunc.apply(this, arguments);
 		};
 	};
 
-	Overloader.prototype._convertPsuedoTypesToKey = function (rawArguments) {
-		return Util.map(rawArguments, function (arg) {
-			switch (arg) {
-				case Number:
-					return "n";
-				case String:
-					return "s";
-				default:
-					throw "Unrecognised argument type";
-			}
-		});
-	};
-
-	Overloader.prototype._convertObjectsToKey = function (rawArguments) {
-		return Util.map(rawArguments, function (arg) {
-			if (Type.isString(arg)) {
-				return "s";
-			} else if (Type.isNumber(arg)) {
-				return "n";
-			} else {
-				throw "Unrecognised argument type";
-			}
-		});
-	};
-
-	Overloader.prototype._addOverloadEntry = function (overloadArgs, overloadFunc) {
+	Func.prototype._addOverloadEntry = function (overloadArgs, overloadFunc) {
 		if (!this.entries) {
 			this.entries = {};
 		}
@@ -90,7 +65,7 @@ define(function (require) {
 		}
 	};
 
-	Overloader.prototype._getOverloadEntry = function (overloadArgs) {
+	Func.prototype._getOverloadEntry = function (overloadArgs) {
 		var currentEntry = this.entries;
 		Util.forEach(overloadArgs, function (arg) {
 			currentEntry = currentEntry[arg];
@@ -98,7 +73,7 @@ define(function (require) {
 		return currentEntry.overloadFunc;
 	};
 
-	overloaderHook = new Overloader();
+	funcHook = new Func();
 
-	return overloaderHook;
+	return funcHook;
 });

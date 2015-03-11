@@ -11,20 +11,32 @@
 		}
 	});
 
-	require(["Overloader"], function (Overloader) {
+	require(["ImplOad"], function (ImplOad) {
 
 		var Person = (function () {
 
-			function Person(name) {
+			function Person(name, age) {
 				this.name = name;
+				this.age = age;
 			}
 
-			Person.prototype.sayName = Overloader
+			Person.prototype.sayName = ImplOad.Func
 				.overload(function () {
 					this.sayName(this.name);
 				})
-				.overload(String, function (name) {
+				.overload(ImplOad.String, function (name) {
 					this.speak("My name is " + name);
+				});
+
+			Person.prototype.sayAge = ImplOad.Func
+				.overload(function () {
+					this.sayAge(this.age);
+				})
+				.overload(ImplOad.Number, function (age) {
+					this.sayAge(age, age === this.age ? "trustworthy" : "deceitful");
+				})
+				.overload(ImplOad.Number, ImplOad.String, function (age, emotion) {
+					this.speak("I am " + age + " years old and I'm feeling pretty " + emotion + " about it");
 				});
 
 			Person.prototype.speak = function (phrase) {
@@ -34,10 +46,15 @@
 			return Person;
 		} ());
 
-		var michael = new Person("Michael");
+		var michael = new Person("Michael", 25);
 		michael.speak("Hi there!");
+
 		michael.sayName();
 		michael.sayName("ughh... Not Michael");
+
+		michael.sayAge();
+		michael.sayAge(24);
+		michael.sayAge(20, "good");
 	});
 } ());
 

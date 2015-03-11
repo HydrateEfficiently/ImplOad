@@ -4,6 +4,8 @@ define(function (require) {
 
 	return {
 		forEach: _.forEach,
-		map: _.map
+		map: _.map,
+		any: _.any,
+		find: _.find
 	};
 });
