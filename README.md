@@ -74,6 +74,9 @@ person.sayName(); // Michael said 'My name is Michael'
 person.sayName("ughh... Not Michael"); // Michael said 'My name is ughh... Not Michael'
 ```
 
+### Constructor overloading
+_TODO_
+
 ### Argument types
 Pass in any of these values to specify what "native" argument types the function must take
 - Strings: `ImplOad.String`, `window.String`
