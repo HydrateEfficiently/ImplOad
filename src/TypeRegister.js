@@ -14,38 +14,73 @@ define(function (require) {
 		typeAliasFunctionsByKey = { },
 		customTypeRegister = { };
 
+	function getKeyFromArgumentType(argumentType) {
+		if (TypeChecker.isString(argumentType) && keyRegister[argumentType]) { // argumentType is already a key
+			return argumentType;
+		}
+
+		var typeAliasKey = Util.findKey(typeAliasFunctionsByKey, function (typeAliasFunctions) {
+			return Util.any(typeAliasFunctions, function (typeAliasFunction) {
+				return typeAliasFunction(argumentType);
+			});
+		});
+
+		if (typeAliasKey === undefined) {
+			throw "Unable to find type, or alias to type";
+		}
+
+		return typeAliasKey;
+	}
+
+	function getKeyFromArgumentObject(argumentObject) {
+		var type = Util.find(nativeTypeRegister, function (registeredType) {
+			return registeredType.isType(argumentObject);
+		});
+
+		if (type === undefined) {
+			throw "Unable to find type";
+		}
+		return type.key;
+	}
+
 	function convertTypeAliasesToKeys(argumentTypes) {
 		return Util.map(argumentTypes, function (argumentType) {
-			if (TypeChecker.isString(argumentType) && keyRegister[argumentType]) { // argumentType is already a key
-				return argumentType;
+			if (TypeChecker.isArray(argumentType)) {
+				if (argumentType.length > 0) {
+					if (argumentType.length === 1) {
+						return C_ARRAY_TYPE_KEY + ":" + getKeyFromArgumentType(argumentType[0]);
+					} else {
+						throw "Can only specify an array of types with one entrie";
+					}
+				}
 			}
-
-			var typeAliasKey = Util.findKey(typeAliasFunctionsByKey, function (typeAliasFunctions) {
-				return Util.any(typeAliasFunctions, function (typeAliasFunction) {
-					return typeAliasFunction(argumentType);
-				});
-			});
-
-			if (typeAliasKey === undefined) {
-				throw "Unable to find type, or alias to type";
-			}
-
-			return typeAliasKey;
+			return getKeyFromArgumentType(argumentType);
 		});
 	}
 
 	function convertObjectsToKeys(argumentObjects) {
 		return Util.map(argumentObjects, function (argumentObject) {
-			var type = Util.find(nativeTypeRegister, function (registeredType) {
-				return registeredType.isType(argumentObject);
-			});
+			if (TypeChecker.isArray(argumentObject)) {
+				if (argumentObject.length === 0) {
+					throw "This is not supported yet, sorry!";
+				}
 
-			if (type === undefined) {
-				throw "Unable to find type";
+				var mappedToKeys = Util.map(argumentObject, function (arrayEntry) {
+					return getKeyFromArgumentObject(arrayEntry);
+				});
+
+				if (!Util.allEqual(mappedToKeys)) {
+					throw "Values in array are not the same type.";
+				}
+
+				return getTypedArrayKey(getKeyFromArgumentObject(mappedToKeys[0]));
 			}
-			return type.key;
+			return getKeyFromArgumentObject(argumentObject);
 		});
-		
+	}
+
+	function getTypedArrayKey(typeKey) {
+		return C_ARRAY_TYPE_KEY + ":" + typeKey;
 	}
 
 	function registerTypeWithKey(typeName, key, isTypeFunc) {
@@ -68,7 +103,9 @@ define(function (require) {
 	}
 
 	registerTypeWithKey("String", C_STRING_TYPE_KEY, TypeChecker.isString);
+	addTypeAlias(C_STRING_TYPE_KEY, function (value) { return value === String; });
 	registerTypeWithKey("Number", C_NUMBER_TYPE_KEY, TypeChecker.isNumber);
+	addTypeAlias(C_NUMBER_TYPE_KEY, function (value) { return value === Number; });
 	registerTypeWithKey("Function", C_FUNCTION_TYPE_KEY, TypeChecker.isFunction);
 	registerTypeWithKey("Array", C_ARRAY_TYPE_KEY, TypeChecker.isArray);
 	addTypeAlias(C_ARRAY_TYPE_KEY, TypeChecker.isArray);

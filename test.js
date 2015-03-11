@@ -47,7 +47,7 @@
 				.overload(ImplOad.String, function (name) {
 					this.meet([name]);
 				})
-				.overload(ImplOad.Array, function (names) { // Specifying [] instead of ImplOad.Array also acceptable
+				.overload([ImplOad.String], function (names) { // Specifying [] instead of ImplOad.Array also acceptable
 					console.log(this.name + " met with " + names.join(", "));
 				});
 
