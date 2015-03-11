@@ -4,7 +4,8 @@ define(function (require) {
 	var C_STRING_TYPE_KEY = "s",
 		C_NUMBER_TYPE_KEY = "n",
 		C_FUNCTION_TYPE_KEY = "f",
-		C_ARRAY_TYPE_KEY = "a";
+		C_ARRAY_TYPE_KEY = "a",
+		C_OBJECT_TYPE_KEY = "o";
 
 	var TypeChecker = require("TypeChecker"),
 		Util = require("Util");
@@ -73,7 +74,7 @@ define(function (require) {
 					throw "Values in array are not the same type.";
 				}
 
-				return getTypedArrayKey(getKeyFromArgumentObject(mappedToKeys[0]));
+				return getTypedArrayKey(mappedToKeys[0]);
 			}
 			return getKeyFromArgumentObject(argumentObject);
 		});
@@ -109,12 +110,16 @@ define(function (require) {
 	registerTypeWithKey("Function", C_FUNCTION_TYPE_KEY, TypeChecker.isFunction);
 	registerTypeWithKey("Array", C_ARRAY_TYPE_KEY, TypeChecker.isArray);
 	addTypeAlias(C_ARRAY_TYPE_KEY, TypeChecker.isArray);
+	addTypeAlias(C_ARRAY_TYPE_KEY, function (value) { return value === Array; });
+	registerTypeWithKey("Object", C_OBJECT_TYPE_KEY, TypeChecker.isObject);
+	addTypeAlias(C_OBJECT_TYPE_KEY, TypeChecker.isObject);
 
 	return {
 		String: C_STRING_TYPE_KEY,
 		Number: C_NUMBER_TYPE_KEY,
 		Function: C_FUNCTION_TYPE_KEY,
 		Array: C_ARRAY_TYPE_KEY,
+		Object: C_OBJECT_TYPE_KEY,
 		registerType: registerType,
 		convertTypeAliasesToKeys: convertTypeAliasesToKeys,
 		convertObjectsToKeys: convertObjectsToKeys

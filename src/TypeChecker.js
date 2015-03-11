@@ -10,11 +10,15 @@ define(function (require) {
 		},
 
 		isArray: function (value) {
-			return value.constructor === Array;
+			return Array.isArray(value);
 		},
 
 		isFunction: function (value) {
 			return typeof(value) === "function";
+		},
+
+		isObject: function (value) {
+			return value !== null && typeof(value) === "object";
 		}
 	};
 });

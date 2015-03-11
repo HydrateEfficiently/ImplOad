@@ -12,6 +12,7 @@ define(function (require) {
 		Number: TypeRegister.Number,
 		Function: TypeRegister.Function,
 		Array: TypeRegister.Array,
+		Object: TypeRegister.Object,
 		addType: TypeRegister.addType
 	};
 });
