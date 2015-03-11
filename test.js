@@ -43,6 +43,22 @@
 				console.log(this.name + " said '" + phrase + "'");
 			};
 
+			Person.prototype.meet = ImplOad.Func
+				.overload(ImplOad.String, function (name) {
+					this.meet([person]);
+				})
+				.overload([ImplOad.String], function (people) {
+					console.log(this.name + " met with " + people.join(", "));
+				});
+
+			Person.prototype.meet = ImplOad.Func
+				.overload(ImplOad.String, function (name) {
+					this.meet([name]);
+				})
+				.overload(ImplOad.Array, function (names) { // Specifying [] instead of ImplOad.Array also acceptable
+					console.log(this.name + " met with " + names.join(", "));
+				});
+
 			return Person;
 		} ());
 
@@ -55,6 +71,9 @@
 		michael.sayAge();
 		michael.sayAge(24);
 		michael.sayAge(20, "good");
+
+		michael.meet("Jack");
+		michael.meet(["Jack", "John", "Jill"]);
 	});
 } ());
 

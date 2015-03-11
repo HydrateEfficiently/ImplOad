@@ -1,6 +1,6 @@
 define(function (require) {
 
-	var Types = require("Types"),
+	var TypeRegister = require("TypeRegister"),
 		Util = require("Util");
 
 	var funcHook;
@@ -21,7 +21,7 @@ define(function (require) {
 			overloadArgs = Array.prototype.slice.call(arguments, 0, argsLength - 1),
 			overloadFunc = arguments[argsLength - 1];
 
-		overloadObj._addOverloadEntry(overloadArgs, overloadFunc);
+		overloadObj._addOverloadEntry(TypeRegister.convertTypeAliasesToKeys(overloadArgs), overloadFunc);
 
 		var theFunc = overloadObj._evaluateOverload();
 		theFunc.overload = function () {
@@ -33,7 +33,7 @@ define(function (require) {
 	Func.prototype._evaluateOverload = function () {
 		var overloadObj = this;
 		return function () {
-			var overloadArgs = Types.convertObjectsToKeys(Array.prototype.slice.call(arguments)),
+			var overloadArgs = TypeRegister.convertObjectsToKeys(Array.prototype.slice.call(arguments)),
 				overloadFunc = overloadObj._getOverloadEntry(overloadArgs);
 			overloadFunc.apply(this, arguments);
 		};

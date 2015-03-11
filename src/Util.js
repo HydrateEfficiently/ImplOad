@@ -6,6 +6,7 @@ define(function (require) {
 		forEach: _.forEach,
 		map: _.map,
 		any: _.any,
-		find: _.find
+		find: _.find,
+		findKey: _.findKey
 	};
 });

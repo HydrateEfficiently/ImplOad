@@ -3,13 +3,15 @@ define(function (require) {
 
 	var Func = require("Func"),
 		Ctor = require("Ctor"),
-		Types = require("Types");
+		TypeRegister = require("TypeRegister");
 
 	return {
 		Func: Func,
 		Ctor: Ctor,
-		String: Types.String,
-		Number: Types.Number,
-		addType: Types.addType
+		String: TypeRegister.String,
+		Number: TypeRegister.Number,
+		Function: TypeRegister.Function,
+		Array: TypeRegister.Array,
+		addType: TypeRegister.addType
 	};
 });
