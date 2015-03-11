@@ -82,6 +82,7 @@ Pass in any of these values to specify what "native" argument types the function
 - Objects: `ImplOad.Object`
 - Functions: `ImplOad.Function`
 - Not-typed: `ImplOad.Dynamic`
+- Any constructor available in context: e.g. `Person` (TODO)
 
 ### Declaring array types
 By default in ImplOad, array values themselves are untyped when specified:
