@@ -115,9 +115,12 @@ ImplOad can sometimes match multiple function signatures to an overloaded functi
 var someFunc = ImplOad.Func
 	.overload([ImplOad.String], function (arrayOfStrings) {	})
 	.overload([ImplOad.Number], function (arrayOfNumbers) {	})
-	.overload([ImplOad.Dynamic], function (arrayOfAnything) { });
+	.overload([ImplOad.Dynamic], function (arrayOfAnything) { })
+	.overload(ImplOad.Dynamic, function (arrayOfAnything) { });
 	
-someFunc(["a", "b", "c"]); // Matches [ImplOad.String] and [Impload.Dynamic] - [ImplOad.String] is called
-someFunc([1, 2, 3]); // Matches [ImplOad.Number] and [Impload.Dynamic] - [ImplOad.Number] is called
-someFunc(["a", "b", 3]) // Only matches [ImplOad.Dynamic]
+someFunc(["a", "b", "c"]); // Matches [ImplOad.String], [Impload.Dynamic] and Impload.Dynamic - [ImplOad.String] is called
+someFunc([1, 2, 3]); // Matches [ImplOad.Number], [Impload.Dynamic] and Impload.Dynamic - [ImplOad.Number] is called
+someFunc(["a", "b", 3]); // Matches [ImplOad.Dynamic] and Impload.Dynamic - [Impload.Dynamic] is called
+someFunc("a"); // Only matches Impload.Dynamic
+someFunc("a", "b", "c"); // No overload takes three arguments (not an array!) - matches nothing. Error!
 ```
