@@ -129,4 +129,4 @@ someFunc("a", "b", "c"); // No overload takes three arguments (not an array!) - 
 ```
 
 ### Default parameters
-__TODO__
+_TODO_
