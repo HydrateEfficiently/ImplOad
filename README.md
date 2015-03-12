@@ -83,9 +83,9 @@ Pass in any of these values to specify what "native" argument types the function
 - Numbers: `ImplOad.Number`, `window.Number`
 - Arrays: `ImplOad.Array`, `window.Array`,  `[]`
 - Objects: `ImplOad.Object`
-- Functions: `ImplOad.Function`, `window.Function` (TODO)
+- Functions: `ImplOad.Function`, `window.Function` (_TODO_)
 - Not-typed: `ImplOad.Dynamic`
-- Any constructor available in context: e.g. `Person` (TODO)
+- Any constructor available in context: e.g. `Person` (_TODO_)
 
 ### Declaring array types
 By default in ImplOad, array values themselves are untyped when specified:
@@ -127,3 +127,6 @@ someFunc(["a", "b", 3]); // Matches [ImplOad.Dynamic] and Impload.Dynamic - [Imp
 someFunc("a"); // Only matches Impload.Dynamic
 someFunc("a", "b", "c"); // No overload takes three arguments (not an array!) - matches nothing. Error!
 ```
+
+### Default parameters
+__TODO__
