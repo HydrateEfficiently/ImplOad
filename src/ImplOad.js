@@ -1,18 +1,18 @@
 define(function (require) {
 	"use strict";
 
-	var Func = require("Func"),
-		Ctor = require("Ctor"),
-		TypeRegister = require("TypeRegister");
+	var Func = require("Core/Func"),
+		Ctor = require("Core/Ctor"),
+		SignatureResolver = require("Core/SignatureResolver");
 
 	return {
 		Func: Func,
 		Ctor: Ctor,
-		String: TypeRegister.String,
-		Number: TypeRegister.Number,
-		Function: TypeRegister.Function,
-		Array: TypeRegister.Array,
-		Object: TypeRegister.Object,
-		addType: TypeRegister.addType
+		String: SignatureResolver.String,
+		Number: SignatureResolver.Number,
+		Function: SignatureResolver.Function,
+		Array: SignatureResolver.Array,
+		Object: SignatureResolver.Object,
+		addType: SignatureResolver.addType
 	};
 });

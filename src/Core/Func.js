@@ -1,7 +1,6 @@
 define(function (require) {
 
-	var TypeRegister = require("TypeRegister"),
-		Util = require("Util");
+	var SignatureResolver = require("Core/SignatureResolver");
 
 	var funcHook;
 
@@ -23,7 +22,7 @@ define(function (require) {
 			overloadArgs = Array.prototype.slice.call(arguments, 0, argsLength - 1),
 			overloadFunc = arguments[argsLength - 1];
 
-		overloadObj._addOverloadEntry(TypeRegister.convertTypeAliasesToKeys(overloadArgs), overloadFunc);
+		overloadObj._addOverloadEntry(SignatureResolver.convertTypeAliasesToKeys(overloadArgs), overloadFunc);
 
 		var theFunc = overloadObj._evaluateOverload();
 		theFunc.overload = function () {
@@ -35,7 +34,7 @@ define(function (require) {
 	Func.prototype._evaluateOverload = function () {
 		var overloadObj = this;
 		return function () {
-			var overloadArgs = TypeRegister.convertObjectsToKeys(Array.prototype.slice.call(arguments)),
+			var overloadArgs = SignatureResolver.convertObjectsToKeys(Array.prototype.slice.call(arguments)),
 				overloadFunc = overloadObj._getOverloadEntry(overloadArgs);
 			overloadFunc.apply(this, arguments);
 		};
